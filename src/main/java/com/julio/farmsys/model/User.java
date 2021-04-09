@@ -3,12 +3,14 @@ package com.julio.farmsys.model;
 import java.util.Collection;
 import java.util.Collections;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import com.julio.farmsys.roles.Role;
 
@@ -26,12 +28,20 @@ public class User implements UserDetails {
     private String email;
     private String username;
     private String password;
-    private boolean locked;
-    private boolean enabled;
+    private boolean locked = false;
+    private boolean enabled = false;
     @Enumerated(EnumType.STRING)
     private Role role;
 
     public User() {
+    }
+
+    public User(String name, String email, String username, String password, Role role) {
+        this.name = name;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
 
     public User(String name, String email, String username, String password, boolean locked, boolean enabled, Role role) {

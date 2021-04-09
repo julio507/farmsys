@@ -9,9 +9,10 @@ spring:
             prefix: /WEB-INF/jsp/
             suffix: .jsp
     jpa:
+        hibernate:
+            ddl-auto: update
         properties:
             hibenate:
-                ddl-auto: update
                 dialect: org.hibernate.dialect.MariaDBDialect
     datasource:
             url: jdbc:mysql://localhost:3306/farmsys

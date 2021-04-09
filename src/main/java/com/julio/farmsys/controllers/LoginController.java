@@ -1,20 +1,20 @@
-package com.julio.farmsys.controllers;
+// package com.julio.farmsys.controllers;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+// import org.springframework.stereotype.Controller;
+// import org.springframework.ui.Model;
+// import org.springframework.web.bind.annotation.GetMapping;
+// import org.springframework.web.bind.annotation.PostMapping;
 
-@Controller
-public class LoginController {
+// @Controller
+// public class LoginController {
 
-    @GetMapping({ "login" })
-    public String login(Model model) {
-        return "login";
-    }
+//     @GetMapping({ "login" })
+//     public String login(Model model) {
+//         return "login";
+//     }
 
-    @PostMapping("login/post")
-    public void doLogin(Model model) {
+//     @PostMapping("login/post")
+//     public void doLogin(Model model) {
 
-    }
-}
+//     }
+// }

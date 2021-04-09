@@ -1,24 +1,18 @@
 package com.julio.farmsys.util;
 
 public class RegistrationRequest {
-    private final String firstName;
-    private final String lastName;
+    private final String name;
     private final String email;
     private final String password;
 
-    public RegistrationRequest(String firstName, String lastName, String email, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public RegistrationRequest( String name, String email, String password) {
+        this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
+    public String getName() {
+        return name;
     }
 
     public String getEmail() {
@@ -31,8 +25,7 @@ public class RegistrationRequest {
 
     @Override
     public String toString() {
-        return "RegistrationRequest [email=" + email + ", firstName=" + firstName + ", lastName=" + lastName
-                + ", password=" + password + "]";
+        return "RegistrationRequest [email=" + email + ", name=" + name + ", password=" + password + "]";
     }
 
     @Override
@@ -40,8 +33,7 @@ public class RegistrationRequest {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((email == null) ? 0 : email.hashCode());
-        result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
-        result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + ((password == null) ? 0 : password.hashCode());
         return result;
     }
@@ -60,15 +52,10 @@ public class RegistrationRequest {
                 return false;
         } else if (!email.equals(other.email))
             return false;
-        if (firstName == null) {
-            if (other.firstName != null)
+        if (name == null) {
+            if (other.name != null)
                 return false;
-        } else if (!firstName.equals(other.firstName))
-            return false;
-        if (lastName == null) {
-            if (other.lastName != null)
-                return false;
-        } else if (!lastName.equals(other.lastName))
+        } else if (!name.equals(other.name))
             return false;
         if (password == null) {
             if (other.password != null)
@@ -77,4 +64,7 @@ public class RegistrationRequest {
             return false;
         return true;
     }
+
+
+    
 }

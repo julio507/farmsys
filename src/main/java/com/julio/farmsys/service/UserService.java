@@ -19,12 +19,12 @@ import org.springframework.stereotype.Service;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final EmailValidator emailValidator;
+    //private final EmailValidator emailValidator;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, EmailValidator emailValidator, BCryptPasswordEncoder passwordEncoder ) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder ) {
         this.userRepository = userRepository;
-        this.emailValidator = emailValidator;
+        //this.emailValidator = emailValidator;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -34,20 +34,18 @@ public class UserService implements UserDetailsService {
     }
 
     public String register( RegistrationRequest request){
-        boolean isValid = emailValidator.test( request.getEmail() );
+        // boolean isValid = emailValidator.test( request.getEmail() );
         
-        if( !isValid )
-        {
-            throw new IllegalStateException( "Validation error" );
-        }
+        // if( !isValid )
+        // {
+        //     throw new IllegalStateException( "Validation error" );
+        // }
 
         User user = new User( 
-            request.getFirstName(),
+            request.getName(),
             request.getEmail(),
             request.getEmail(),
             request.getPassword(),
-            false,
-            true,
             Role.USER );
 
         boolean userExists = userRepository.findByEmail( user.getEmail() ).isPresent();
@@ -64,18 +62,18 @@ public class UserService implements UserDetailsService {
 
         String token = UUID.randomUUID().toString();
 
-ConfirmationToken confirmationToken = new ConfirmationToken(
-        token,
-        LocalDateTime.now(),
-        LocalDateTime.now().plusMinutes(15),
-        appUser
-);
+// ConfirmationToken confirmationToken = new ConfirmationToken(
+//         token,
+//         LocalDateTime.now(),
+//         LocalDateTime.now().plusMinutes(15),
+//         appUser
+// );
 
-confirmationTokenService.saveConfirmationToken(
-        confirmationToken);
+// confirmationTokenService.saveConfirmationToken(
+//         confirmationToken);
 
 //        TODO: SEND EMAIL
 
-return token;
+        return "works";
     }
 }
