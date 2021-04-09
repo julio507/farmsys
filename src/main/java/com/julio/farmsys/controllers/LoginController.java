@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class LoginController {
 
-    @GetMapping( {"login"} )
+    @GetMapping({ "login" })
     public String login(Model model) {
         return "login";
     }
 
-    // @PostMapping
+    @PostMapping("login/post")
+    public void doLogin(Model model) {
+
+    }
 }

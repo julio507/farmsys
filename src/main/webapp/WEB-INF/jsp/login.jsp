@@ -25,7 +25,7 @@
 </head>
 <body>
     <div>
-        <form action="postLogin">
+        <form method="POST" action="login/post">
             <h1>FarmSys</h1>
             <p>Usuario:</p><input type="text"/>
             <p>Senha:</p><input type="text"/>

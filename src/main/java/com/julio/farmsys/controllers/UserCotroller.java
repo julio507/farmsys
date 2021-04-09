@@ -1,20 +1,26 @@
 package com.julio.farmsys.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.julio.farmsys.service.UserService;
+import com.julio.farmsys.util.RegistrationRequest;
 
-import com.julio.farmsys.model.User;
-
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "api/user")
+@RequestMapping(path = "api/user/")
 public class UserCotroller {
 
-    @GetMapping
-    public List<User> getUsers() {
-        return new ArrayList<>();
+    private UserService userService;
+
+    public UserCotroller( UserService userService )
+    {
+        this.userService = userService;
+    }
+
+    @PostMapping( value = "add" )
+    public String add( @RequestBody RegistrationRequest request ){
+        return userService.register( request );
     }
 }

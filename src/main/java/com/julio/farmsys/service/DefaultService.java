@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public abstract class DefaultService<T> {
 
     @Autowired
-    private JpaRepository<T, Long> repository;
+    protected JpaRepository<T, Long> repository;
 
     public T create(T t) {
         return repository.save(t);
