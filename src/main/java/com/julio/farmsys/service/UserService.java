@@ -1,5 +1,6 @@
 package com.julio.farmsys.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.julio.farmsys.model.User;
@@ -19,61 +20,50 @@ import org.springframework.stereotype.Service;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    //private final EmailValidator emailValidator;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder ) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        //this.emailValidator = emailValidator;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail( username ).orElseThrow( () -> new UsernameNotFoundException( "User Not Found" ) );
+        return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
     }
 
-    public String register( RegistrationRequest request){
-        // boolean isValid = emailValidator.test( request.getEmail() );
-        
-        // if( !isValid )
-        // {
-        //     throw new IllegalStateException( "Validation error" );
-        // }
+    public String register(RegistrationRequest request) {
 
-        User user = new User( 
-            request.getName(),
-            request.getEmail(),
-            request.getEmail(),
-            request.getPassword(),
-            Role.USER );
+        User user = new User(request.getName(), request.getEmail(), request.getEmail(), request.getPassword(),
+                Role.USER);
 
-        boolean userExists = userRepository.findByEmail( user.getEmail() ).isPresent();
+        boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
 
         if (userExists) {
             throw new IllegalStateException("email already taken");
         }
 
-        String encodedPassword = passwordEncoder.encode( user.getPassword());
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
 
         user.setPassword(encodedPassword);
 
         userRepository.save(user);
 
-        String token = UUID.randomUUID().toString();
+        return "ok";
+    }
 
-// ConfirmationToken confirmationToken = new ConfirmationToken(
-//         token,
-//         LocalDateTime.now(),
-//         LocalDateTime.now().plusMinutes(15),
-//         appUser
-// );
+    public void save(User user) {
 
-// confirmationTokenService.saveConfirmationToken(
-//         confirmationToken);
+        user.setPassword( passwordEncoder.encode( user.getPassword() ) );
 
-//        TODO: SEND EMAIL
+        userRepository.save(user);
+    }
 
-        return "works";
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
+
+    public User getById(Long id) {
+        return userRepository.getOne(id);
     }
 }

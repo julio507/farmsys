@@ -31,7 +31,7 @@ public class User implements UserDetails {
     private boolean locked = false;
     private boolean enabled = false;
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.USER;
 
     public User() {
     }
@@ -103,6 +103,14 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @Override
