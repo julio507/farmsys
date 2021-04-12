@@ -127,13 +127,16 @@
         <a href="/">
             <img src="/img/home.png">
         </a>
+        <a href="/logout">
+            <img src="/img/logout.png">
+        </a>
     </div>
     <h1>Usuarios:</h1>
     <form>
         <p>ID:</p><input id="idField" type="text" disabled="true" />
         <p>Nome:<span id="red">*</span></p><input id="nameField" type="text" />
         <p>E-mail:<span id="red">*</span></p><input id="emailField" type="text" />
-        <p>Senha:</p><input id="passwordField" type="text" />
+        <p>Senha:</p><input id="passwordField" type="password" />
         <div class="horizontal">
             <p>Ativo:</p><input id="statusField" type="checkbox" />
         </div>

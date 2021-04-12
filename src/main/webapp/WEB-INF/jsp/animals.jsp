@@ -142,6 +142,9 @@
         <a href="/">
             <img src="/img/home.png">
         </a>
+        <a href="/logout">
+            <img src="/img/logout.png">
+        </a>
     </div>
     <h1>Animais:</h1>
     <form>

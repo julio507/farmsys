@@ -6,26 +6,10 @@
     <title>Page Title</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='/css/main.css'>
-    <style>
-        form{
-            display: grid;
-            padding-left: 25%;
-            padding-right: 25%;
-            padding-top: 20%;
-        }
-
-        #button{
-            margin-top: 5px;
-        }
-
-        h1{
-            font-size: 35px;
-        }
-    </style>
 </head>
 <body>
     <div>
-        <form method="POST" action="login/post">
+        <form method="POST" action="/login">
             <h1>FarmSys</h1>
             <p>Usuario:</p><input type="text"/>
             <p>Senha:</p><input type="text"/>
