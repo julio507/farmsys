@@ -40,11 +40,15 @@ public class UserCotroller {
         Map<String, Object> json = new BasicJsonParser().parseMap(data);
 
         if (json.get("name") == null || json.get("name").toString().isEmpty()) {
-            throw new Exception("Valor para campo Nome invalido");
+            throw new Exception("Campo Nome vazio");
         }
 
         if (json.get("email") == null || json.get("email").toString().isEmpty()) {
-            throw new Exception("Valor para campo E-mail invalido");
+            throw new Exception("Campo E-mail vazio");
+        }
+
+        else if (!json.get("email").toString().contains("@")) {
+            throw new Exception("Campo E-mail em formato invalido");
         }
 
         User u = new User();

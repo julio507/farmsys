@@ -15,9 +15,32 @@ td{
     border: 1px black solid;
 }
 
+form {
+    height: 100%;
+}
+
 form p {
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+form input{
+    height: 20px;
+    width: 400px;
+}
+
+form input[type="button"]
+{
+    width: 100px;
+    height: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+form input[type="checkbox"]
+{
+    width: auto;
+    height: auto;
 }
 
 #menuBar{
@@ -37,6 +60,14 @@ form p {
 #mainMenu div a{
     color: black;
     text-decoration: none;
+}
+
+#usersTable {
+    margin-top: 10px;
+}
+
+#red{
+    color: red;
 }
 
 .horizontal input {
