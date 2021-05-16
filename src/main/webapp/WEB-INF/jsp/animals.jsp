@@ -161,6 +161,12 @@
     </form>
     <table id='dataTable'>
         <thead>
+            <tr id="filter" >
+                <td></td>
+                <td><input id="specieFilter" oninput="refresh()" placeholder="Nome" type="text" /></td>
+                <td><input id="borndateFilter" oninput="refresh()" placeholder="E-mail" type="text" /></td>
+                <td><p>Ativo</p><input id="activeFilter" oninput="refresh()" type="checkbox" checked="true"/></td>
+            </tr>
             <tr>
                 <th>ID</th>
                 <th>Esp&eacute;cie</th>

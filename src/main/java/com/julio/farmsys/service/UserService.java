@@ -63,6 +63,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
+    public List<User> getAll( String name, String email, boolean active ) {
+        return userRepository.find( name, email, active );
+    }
+
     public User getById(Long id) {
         return userRepository.getOne(id);
     }

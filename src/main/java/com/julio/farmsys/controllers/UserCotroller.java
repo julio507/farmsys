@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,8 +32,8 @@ public class UserCotroller {
     }
 
     @GetMapping(value = "getAll")
-    public List<User> getAll() {
-        return userService.getAll();
+    public List<User> getAll( @RequestParam String name, @RequestParam String email, @RequestParam boolean active ) {
+        return userService.getAll( name, email, active );
     }
 
     @PostMapping(value = "update")

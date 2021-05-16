@@ -13,10 +13,12 @@
 
         refresh = function () {
 
-            clearFields();
+            nameFilter = document.getElementById('nameFilter');
+            emailFilter = document.getElementById('emailFilter');
+            activeFilter = document.getElementById( 'activeFilter' );
 
             const Http = new XMLHttpRequest();
-            Http.open("GET", '/api/user/getAll');
+            Http.open("GET", '/api/user/getAll?name=' + nameFilter.value + "&email=" + emailFilter.value + "&active=" + activeFilter.checked );
             Http.send();
 
             Http.onreadystatechange = function () {
@@ -90,6 +92,7 @@
             Http.onreadystatechange = function () {
                 if (this.readyState == 4) {
                     if (this.status == 200) {
+                        clearFields();
                         refresh();
                     }
 
@@ -147,6 +150,12 @@
     </form>
     <table id='usersTable'>
         <thead>
+            <tr id="filter" >
+                <td></td>
+                <td><input id="nameFilter" oninput="refresh()" placeholder="Nome" type="text" /></td>
+                <td><input id="emailFilter" oninput="refresh()" placeholder="E-mail" type="text" /></td>
+                <td><p>Ativo</p><input id="activeFilter" oninput="refresh()" type="checkbox" checked="true"/></td>
+            </tr>
             <tr>
                 <th>ID</th>
                 <th>Nome</th>
