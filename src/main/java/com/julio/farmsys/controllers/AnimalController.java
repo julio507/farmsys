@@ -1,6 +1,7 @@
 package com.julio.farmsys.controllers;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,8 +28,24 @@ public class AnimalController {
     }
 
     @GetMapping("getAll")
-    public List<Animal> getAll() {
-        return animalService.getAll();
+    public List<Animal> getAll(@RequestParam String species, @RequestParam String bornDateMin,
+            @RequestParam String bornDateMax, @RequestParam String aquisitionDateMin,
+            @RequestParam String aquisitionDateMax, @RequestParam String weightMin, @RequestParam String weightMax,
+            @RequestParam String heightMin, @RequestParam String heightMax, @RequestParam String active)
+            throws Exception {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        return animalService.getAll(species,
+                bornDateMin != null & !bornDateMin.isEmpty() ? sdf.parse(bornDateMin) : null,
+                bornDateMax != null && !bornDateMax.isEmpty() ? sdf.parse(bornDateMax) : null,
+                aquisitionDateMin != null && !aquisitionDateMin.isEmpty() ? sdf.parse(aquisitionDateMin) : null,
+                aquisitionDateMax != null && !aquisitionDateMax.isEmpty() ? sdf.parse(aquisitionDateMax) : null,
+                weightMin != null && !weightMin.isEmpty() ? Double.parseDouble(weightMin) : null,
+                weightMax != null && !weightMax.isEmpty() ? Double.parseDouble(weightMax) : null,
+                heightMin != null && !heightMin.isEmpty() ? Double.parseDouble(heightMin) : null,
+                heightMax != null && !heightMax.isEmpty() ? Double.parseDouble(heightMax) : null,
+                Boolean.parseBoolean(active));
     }
 
     @PostMapping("update")
@@ -100,6 +118,8 @@ public class AnimalController {
         catch (Exception e) {
             throw new Exception("Valor invalido no campo Altura");
         }
+
+        a.setActive(Boolean.valueOf(json.get("active").toString()));
 
         animalService.save(a);
     }

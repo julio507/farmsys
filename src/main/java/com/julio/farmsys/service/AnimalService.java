@@ -1,5 +1,6 @@
 package com.julio.farmsys.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.julio.farmsys.model.Animal;
@@ -19,11 +20,18 @@ public class AnimalService {
         return animalRepository.findAll();
     }
 
+    public List<Animal> getAll(String species, Date bornDateMin, Date bornDateMax, Date aquisitionDateMin,
+            Date aquisitioDateMax, Double weightMin, Double weightMax, Double heightMin, Double heightMax,
+            boolean active) {
+        return animalRepository.find(species, bornDateMin, bornDateMax, aquisitionDateMin, aquisitioDateMax, weightMin,
+                weightMax, heightMin, heightMax, active);
+    }
+
     public Animal getById(long id) {
         return animalRepository.getOne(id);
     }
 
-    public void save( Animal a ){
-        animalRepository.save( a );
+    public void save(Animal a) {
+        animalRepository.save(a);
     }
 }

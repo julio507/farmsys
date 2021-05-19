@@ -11,22 +11,41 @@
     <script>
         _selectedRow = null;
 
-        formatFormDate = function( date ){
-            return date.split( 'T' )[0];
+        formatFormDate = function (date) {
+            return date.split('T')[0];
         }
 
-        formatTableDate = function( date ){
-            formated = formatFormDate( date ).split( '-' );
+        formatTableDate = function (date) {
+            formated = formatFormDate(date).split('-');
 
             return formated[2] + '-' + formated[1] + '-' + formated[0];
         }
 
         refresh = function () {
 
-            clearFields();
+            speciesFilter = document.getElementById('specieFilter');
+            bornDateMinFilter = document.getElementById('bornDateMinFilter');
+            bornDateMaxFilter = document.getElementById('bornDateMaxFilter');
+            aquisitionDateMinFilter = document.getElementById('aquisitionDateMinFilter');
+            aquisitionDateMaxFilter = document.getElementById('aquisitionDateMaxFilter');
+            weightMinFilter = document.getElementById('weightMinFilter');
+            weightMaxFilter = document.getElementById('weightMaxFilter');
+            heightMinFilter = document.getElementById('heightMinFilter');
+            heightMaxFilter = document.getElementById('heightMaxFilter');
+            activeFilter = document.getElementById('activeFilter');
 
             const Http = new XMLHttpRequest();
-            Http.open("GET", '/api/animal/getAll');
+            Http.open("GET", '/api/animal/getAll?species=' + speciesFilter.value +
+                '&bornDateMin=' + bornDateMinFilter.value +
+                '&bornDateMax=' + bornDateMaxFilter.value +
+                '&aquisitionDateMin=' + aquisitionDateMinFilter.value +
+                '&aquisitionDateMax=' + aquisitionDateMaxFilter.value +
+                '&weightMin=' + weightMinFilter.value +
+                '&weightMax=' + weightMaxFilter.value +
+                '&heightMin=' + heightMinFilter.value +
+                '&heightMax=' + heightMaxFilter.value +
+                '&active=' + activeFilter.checked);
+
             Http.send();
 
             Http.onreadystatechange = function () {
@@ -42,10 +61,11 @@
 
                         row.innerHTML = "<td>" + animals[i].id + "</td>" +
                             "<td>" + animals[i].specie + "</td>" +
-                            "<td>" + formatTableDate( animals[i].bornDate ) + "</td>" +
-                            "<td>" + formatTableDate( animals[i].acquisitionDate ) + "</td>" +
+                            "<td>" + formatTableDate(animals[i].bornDate) + "</td>" +
+                            "<td>" + formatTableDate(animals[i].acquisitionDate) + "</td>" +
                             "<td>" + animals[i].weight + "</td>" +
-                            "<td>" + animals[i].height + "</td>";
+                            "<td>" + animals[i].height + "</td>" +
+                            "<td>" + animals[i].active + "</td>";
 
                         row.value = animals[i];
 
@@ -56,13 +76,15 @@
                             acquisitionField = document.getElementById("acquisitionField");
                             weightField = document.getElementById("weightField");
                             heightField = document.getElementById("heightField");
+                            activeField = document.getElementById("statusField");
 
                             idField.value = this.value.id;
                             specieField.value = this.value.specie;
-                            bornField.value = formatFormDate( this.value.bornDate );
-                            acquisitionField.value = formatFormDate( this.value.acquisitionDate );
+                            bornField.value = formatFormDate(this.value.bornDate);
+                            acquisitionField.value = formatFormDate(this.value.acquisitionDate);
                             weightField.value = this.value.weight;
                             heightField.value = this.value.height;
+                            activeField.checked = this.value.active;
 
                             if (_selectedRow != null) {
                                 _selectedRow.setAttribute("class", null);
@@ -89,6 +111,7 @@
             acquisitionField = document.getElementById("acquisitionField");
             weightField = document.getElementById("weightField");
             heightField = document.getElementById("heightField");
+            activeField = document.getElementById("statusField");
 
             value = {};
 
@@ -98,10 +121,12 @@
             value.acquisitionDate = acquisitionField.value;
             value.weight = weightField.value;
             value.height = heightField.value;
+            value.active = activeField.checked;
 
             Http.onreadystatechange = function () {
                 if (this.readyState == 4) {
                     if (this.status == 200) {
+                        clearFields();
                         refresh();
                     }
 
@@ -155,17 +180,38 @@
         <p>Peso:<span id="red">*</span></p><input id="weightField" type="number" min="0" />
         <p>Altura:<span id="red">*</span></p><input id="heightField" type="number" min="0" />
         <div class="horizontal">
+            <p>Ativo:</p><input id="statusField" type="checkbox" />
+        </div>
+        <div class="horizontal">
             <input value="Salvar" onclick="send()" type="button" />
             <input value="Limpar" onclick="clearFields()" type="button" />
         </div>
     </form>
     <table id='dataTable'>
         <thead>
-            <tr id="filter" >
+            <tr id="filter">
                 <td></td>
                 <td><input id="specieFilter" oninput="refresh()" placeholder="Nome" type="text" /></td>
-                <td><input id="borndateFilter" oninput="refresh()" placeholder="E-mail" type="text" /></td>
-                <td><p>Ativo</p><input id="activeFilter" oninput="refresh()" type="checkbox" checked="true"/></td>
+                <td>
+                    <input id="bornDateMinFilter" oninput="refresh()" placeholder="Nascimento início" type="date" />
+                    <input id="bornDateMaxFilter" oninput="refresh()" placeholder="Nascimento fim" type="date" />
+                </td>
+                <td>
+                    <input id="aquisitionDateMinFilter" oninput="refresh()" placeholder="Aquisição início"
+                        type="date" />
+                    <input id="aquisitionDateMaxFilter" oninput="refresh()" placeholder="Aquisição fim" type="date" />
+                </td>
+                <td>
+                    <input id="weightMaxFilter" oninput="refresh()" placeholder="Peso minimo" type="number" />
+                    <input id="weightMinFilter" oninput="refresh()" placeholder="Peso maximo" type="number" />
+                </td>
+                <td>
+                    <input id="heightMaxFilter" oninput="refresh()" placeholder="Altura minima" type="number" />
+                    <input id="heightMinFilter" oninput="refresh()" placeholder="Altura maxima" type="number" />
+                </td>
+                <td>
+                    <p>Ativo</p><input id="activeFilter" oninput="refresh()" type="checkbox" checked="true" />
+                </td>
             </tr>
             <tr>
                 <th>ID</th>
@@ -174,6 +220,7 @@
                 <th>Data de aquisi&ccedil;&atilde;o</th>
                 <th>Peso</th>
                 <th>Altura</th>
+                <th>Ativo</th>
             </tr>
         </thead>
         <tbody>

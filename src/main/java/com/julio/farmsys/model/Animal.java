@@ -18,7 +18,8 @@ public class Animal {
     private Date acquisitionDate;
     private Double weight;
     private Double height;
-    
+    private boolean active;
+
     public Animal(Long id, String specie, Date bornDate, Date acquisitionDate, Double weight, Double height) {
         this.id = id;
         this.specie = specie;
@@ -28,12 +29,13 @@ public class Animal {
         this.height = height;
     }
 
-    public Animal(String specie, Date bornDate, Date acquisitionDate, Double weight, Double height) {
+    public Animal(String specie, Date bornDate, Date acquisitionDate, Double weight, Double height, boolean active) {
         this.specie = specie;
         this.bornDate = bornDate;
         this.acquisitionDate = acquisitionDate;
         this.weight = weight;
         this.height = height;
+        this.active = active;
     }
 
     public Animal()
@@ -89,5 +91,11 @@ public class Animal {
         this.height = height;
     }
 
-    
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }
