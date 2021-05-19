@@ -13,11 +13,11 @@
         <div>
             <a href="/animals">Cadastro de Animais</a>
         </div>
-        <!-- <div>
-            <a href="/calendar">Calendario de Vacina&ccedil;&atilde;o</a>
-        </div> -->
         <div>
             <a href="/users">Cadastro de Usuarios</a>
+        </div>
+        <div>
+            <a href="/history">Historico</a>
         </div>
     </div>
 </body>

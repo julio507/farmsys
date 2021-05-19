@@ -202,12 +202,12 @@
                     <input id="aquisitionDateMaxFilter" oninput="refresh()" placeholder="Aquisição fim" type="date" />
                 </td>
                 <td>
-                    <input id="weightMaxFilter" oninput="refresh()" placeholder="Peso minimo" type="number" />
-                    <input id="weightMinFilter" oninput="refresh()" placeholder="Peso maximo" type="number" />
+                    <input id="weightMinFilter" oninput="refresh()" placeholder="Peso minimo" type="number" />
+                    <input id="weightMaxFilter" oninput="refresh()" placeholder="Peso maximo" type="number" />
                 </td>
                 <td>
-                    <input id="heightMaxFilter" oninput="refresh()" placeholder="Altura minima" type="number" />
-                    <input id="heightMinFilter" oninput="refresh()" placeholder="Altura maxima" type="number" />
+                    <input id="heightMinFilter" oninput="refresh()" placeholder="Altura minima" type="number" />
+                    <input id="heightMaxFilter" oninput="refresh()" placeholder="Altura maxima" type="number" />
                 </td>
                 <td>
                     <p>Ativo</p><input id="activeFilter" oninput="refresh()" type="checkbox" checked="true" />
