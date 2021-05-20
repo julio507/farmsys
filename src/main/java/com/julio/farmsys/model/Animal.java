@@ -1,11 +1,13 @@
 package com.julio.farmsys.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Animal {
@@ -19,6 +21,9 @@ public class Animal {
     private Double weight;
     private Double height;
     private boolean active;
+
+    @OneToMany
+    private List<History> history;
 
     public Animal(Long id, String specie, Date bornDate, Date acquisitionDate, Double weight, Double height) {
         this.id = id;

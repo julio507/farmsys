@@ -70,6 +70,19 @@ form input[type="checkbox"]
     color: red;
 }
 
+#gridHistory{
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+#gridHistory #formDiv{
+    grid-column: 1;
+}
+
+#gridHistory #tableDiv{
+    grid-column: 2;
+}
+
 .horizontal input {
     margin-left: 5px;
     margin-right: 5px;

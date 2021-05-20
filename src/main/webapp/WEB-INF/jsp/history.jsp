@@ -10,48 +10,73 @@
 
     <script>
         _selectedRow = null;
+        _selectedRowHistory = null;
+
+        formatFormDate = function (date) {
+            return date.split('T')[0];
+        }
+
+        formatTableDate = function (date) {
+            formated = formatFormDate(date).split('-');
+
+            return formated[2] + '-' + formated[1] + '-' + formated[0];
+        }
+
+        refreshHistory = function(){
+
+        }
 
         refresh = function () {
 
-            nameFilter = document.getElementById('nameFilter');
-            emailFilter = document.getElementById('emailFilter');
-            activeFilter = document.getElementById( 'activeFilter' );
+            speciesFilter = document.getElementById('specieFilter');
+            bornDateMinFilter = document.getElementById('bornDateMinFilter');
+            bornDateMaxFilter = document.getElementById('bornDateMaxFilter');
+            aquisitionDateMinFilter = document.getElementById('aquisitionDateMinFilter');
+            aquisitionDateMaxFilter = document.getElementById('aquisitionDateMaxFilter');
+            weightMinFilter = document.getElementById('weightMinFilter');
+            weightMaxFilter = document.getElementById('weightMaxFilter');
+            heightMinFilter = document.getElementById('heightMinFilter');
+            heightMaxFilter = document.getElementById('heightMaxFilter');
+            activeFilter = document.getElementById('activeFilter');
 
             const Http = new XMLHttpRequest();
-            Http.open("GET", '/api/user/getAll?name=' + nameFilter.value + "&email=" + emailFilter.value + "&active=" + activeFilter.checked );
+            Http.open("GET", '/api/animal/getAll?species=' + speciesFilter.value +
+                '&bornDateMin=' + bornDateMinFilter.value +
+                '&bornDateMax=' + bornDateMaxFilter.value +
+                '&aquisitionDateMin=' + aquisitionDateMinFilter.value +
+                '&aquisitionDateMax=' + aquisitionDateMaxFilter.value +
+                '&weightMin=' + weightMinFilter.value +
+                '&weightMax=' + weightMaxFilter.value +
+                '&heightMin=' + heightMinFilter.value +
+                '&heightMax=' + heightMaxFilter.value +
+                '&active=' + activeFilter.checked);
+
             Http.send();
 
             Http.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    users = JSON.parse(Http.responseText);
+                    animals = JSON.parse(Http.responseText);
 
-                    table = document.getElementById('usersTable').getElementsByTagName('tbody')[0];
+                    table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
 
                     table.innerHTML = "";
 
-                    for (i = 0; i < users.length; i++) {
+                    for (i = 0; i < animals.length; i++) {
                         row = table.insertRow(i);
 
-                        row.innerHTML = "<td>" + users[i].id + "</td>" +
-                            "<td>" + users[i].name + "</td>" +
-                            "<td>" + users[i].email + "</td>" +
-                            "<td>" + users[i].enabled + "</td>";
+                        row.innerHTML = "<td>" + animals[i].id + "</td>" +
+                            "<td>" + animals[i].specie + "</td>" +
+                            "<td>" + formatTableDate(animals[i].bornDate) + "</td>" +
+                            "<td>" + formatTableDate(animals[i].acquisitionDate) + "</td>" +
+                            "<td>" + animals[i].weight + "</td>" +
+                            "<td>" + animals[i].height + "</td>" +
+                            "<td>" + animals[i].active + "</td>";
 
-                        row.value = users[i];
+                        row.value = animals[i];
 
                         row.onclick = function () {
-                            idField = document.getElementById("idField");
-                            nameField = document.getElementById("nameField");
-                            emailField = document.getElementById("emailField");
-                            passwordField = document.getElementById("passwordField");
-                            statusField = document.getElementById("statusField");
-
-                            idField.value = this.value.id;
-                            nameField.value = this.value.name;
-                            emailField.value = this.value.email;
-                            passwordField.value = null;
-                            statusField.checked = this.value.enabled;
-
+                            
+                            
                             if (_selectedRow != null) {
                                 _selectedRow.setAttribute("class", null);
                             }
@@ -67,27 +92,27 @@
 
         send = function () {
             const Http = new XMLHttpRequest();
-            Http.open("POST", '/api/user/update');
+            Http.open("POST", '/api/animal/update');
 
             Http.setRequestHeader("Content-Type", "application/json");
 
             idField = document.getElementById("idField");
-            nameField = document.getElementById("nameField");
-            emailField = document.getElementById("emailField");
-            passwordField = document.getElementById("passwordField");
-            statusField = document.getElementById("statusField");
+            specieField = document.getElementById("specieField");
+            bornField = document.getElementById("bornField");
+            acquisitionField = document.getElementById("acquisitionField");
+            weightField = document.getElementById("weightField");
+            heightField = document.getElementById("heightField");
+            activeField = document.getElementById("statusField");
 
             value = {};
 
             value.id = idField.value;
-            value.name = nameField.value;
-            value.email = emailField.value;
-
-            if (passwordField.value) {
-                value.password = passwordField.value;
-            }
-
-            value.enabled = statusField.checked;
+            value.specie = specieField.value;
+            value.bornDate = bornField.value;
+            value.acquisitionDate = acquisitionField.value;
+            value.weight = weightField.value;
+            value.height = heightField.value;
+            value.active = activeField.checked;
 
             Http.onreadystatechange = function () {
                 if (this.readyState == 4) {
@@ -107,16 +132,18 @@
 
         clearFields = function () {
             idField = document.getElementById("idField");
-            nameField = document.getElementById("nameField");
-            emailField = document.getElementById("emailField");
-            passwordField = document.getElementById("passwordField");
-            statusField = document.getElementById("statusField");
+            specieField = document.getElementById("specieField");
+            bornField = document.getElementById("bornField");
+            acquisitionField = document.getElementById("acquisitionField");
+            weightField = document.getElementById("weightField");
+            heightField = document.getElementById("heightField");
 
             idField.value = null;
-            nameField.value = null;
-            emailField.value = null;
-            passwordField.value = null;
-            statusField.value = null;
+            specieField.value = null;
+            bornField.value = null;
+            acquisitionField.value = null;
+            weightField.value = null;
+            heightField.value = null;
 
             _selectedRow = null;
         }
@@ -125,6 +152,7 @@
             refresh();
         }
     </script>
+
 <body>
     <div id="menuBar" class="horizontal">
         <a href="/">
@@ -134,32 +162,75 @@
             <img src="/img/logout.png">
         </a>
     </div>
-    <h1>Usuarios:</h1>
-    <form>
-        <p>ID:</p><input id="idField" type="text" disabled="true" />
-        <p>Nome:<span id="red">*</span></p><input id="nameField" type="text" />
-        <p>E-mail:<span id="red">*</span></p><input id="emailField" type="text" />
-        <p>Senha:</p><input id="passwordField" type="password" />
-        <div class="horizontal">
-            <p>Ativo:</p><input id="statusField" type="checkbox" />
+    <div id="gridHistory">
+        <div id="formDiv">
+            <h1>Animais:</h1>
+            <form>
+                <p>ID:</p><input id="idField" type="text" disabled="true" />
+                <p>Animal:</p><input id="animalField" type="text" disabled="true" />
+                <p>Data:</p><input id="dateField" type="date" />
+                <p>Peso:</p><input id="weightField" type="number" />
+                <p>Altura:</p><input id="heightField" type="number" />
+                <div class="horizontal">
+                    <input value="Salvar" onclick="send()" type="button" />
+                    <input value="Limpar" onclick="clearFields()" type="button" />
+                </div>
+            </form>
         </div>
-        <div class="horizontal">
-            <input value="Salvar" onclick="send()" type="button" />
-            <input value="Limpar" onclick="clearFields()" type="button" />
+        <div id="tableDiv">
+            <table>
+                <tr id="filter">
+                    <td></td>
+                    <td>
+                        <input id="dateMin" oninput="refreshHistory()" placeholder="Data início" type="date" />
+                        <input id="dateMax" oninput="refreshHistory()" placeholder="Data fim" type="date" />
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Data</th>
+                    <th>Peso</th>
+                    <th>Altura</th>
+                </tr>
+            </table>
         </div>
-    </form>
-    <table id='usersTable'>
+    </div>
+    <table id='dataTable'>
         <thead>
-            <tr id="filter" >
+            <tr id="filter">
                 <td></td>
-                <td><input id="nameFilter" oninput="refresh()" placeholder="Nome" type="text" /></td>
-                <td><input id="emailFilter" oninput="refresh()" placeholder="E-mail" type="text" /></td>
-                <td><p>Ativo</p><input id="activeFilter" oninput="refresh()" type="checkbox" checked="true"/></td>
+                <td><input id="specieFilter" oninput="refresh()" placeholder="Nome" type="text" /></td>
+                <td>
+                    <input id="bornDateMinFilter" oninput="refresh()" placeholder="Nascimento início" type="date" />
+                    <input id="bornDateMaxFilter" oninput="refresh()" placeholder="Nascimento fim" type="date" />
+                </td>
+                <td>
+                    <input id="aquisitionDateMinFilter" oninput="refresh()" placeholder="Aquisição início"
+                        type="date" />
+                    <input id="aquisitionDateMaxFilter" oninput="refresh()" placeholder="Aquisição fim" type="date" />
+                </td>
+                <td>
+                    <input id="weightMinFilter" oninput="refresh()" placeholder="Peso minimo" type="number" />
+                    <input id="weightMaxFilter" oninput="refresh()" placeholder="Peso maximo" type="number" />
+                </td>
+                <td>
+                    <input id="heightMinFilter" oninput="refresh()" placeholder="Altura minima" type="number" />
+                    <input id="heightMaxFilter" oninput="refresh()" placeholder="Altura maxima" type="number" />
+                </td>
+                <td>
+                    <p>Ativo</p><input id="activeFilter" oninput="refresh()" type="checkbox" checked="true" />
+                </td>
             </tr>
             <tr>
                 <th>ID</th>
-                <th>Nome</th>
-                <th>E-mail</th>
+                <th>Esp&eacute;cie</th>
+                <th>Data de nascimento</th>
+                <th>Data de aquisi&ccedil;&atilde;o</th>
+                <th>Peso</th>
+                <th>Altura</th>
                 <th>Ativo</th>
             </tr>
         </thead>

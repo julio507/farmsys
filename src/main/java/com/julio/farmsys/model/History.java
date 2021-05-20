@@ -6,24 +6,29 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
-public class AnimalHistory {
+public class History {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Date date;
     private double weight;
     private double height;
+    @ManyToOne
+    @JoinColumn(name="animalId")
+    private Animal animal;
 
-    public AnimalHistory(Long id, Date date, double weight, double height) {
+    public History(Long id, Date date, double weight, double height,Animal animal) {
         this.id = id;
         this.date = date;
         this.weight = weight;
         this.height = height;
     }
 
-    public AnimalHistory(Date date, double weight, double height) {
+    public History(Date date, double weight, double height,Animal animal) {
         this.date = date;
         this.weight = weight;
         this.height = height;
