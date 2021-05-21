@@ -34,6 +34,10 @@ public class History {
         this.height = height;
     }
 
+    public History(){
+
+    }
+
     public Long getId() {
         return id;
     }
@@ -64,5 +68,13 @@ public class History {
 
     public void setHeight(double height) {
         this.height = height;
+    }
+
+    public Animal getAnimal() {
+        return animal;
+    }
+
+    public void setAnimal(Animal animal) {
+        this.animal = animal;
     }
 }

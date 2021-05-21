@@ -22,8 +22,61 @@
             return formated[2] + '-' + formated[1] + '-' + formated[0];
         }
 
-        refreshHistory = function(){
+        refreshHistory = function () {
+            dateMinFilterHistory = document.getElementById('dateMinFilterHistory');
+            dateMaxFilterHistory  = document.getElementById('dateMaxFilterHistory');
+            weightMinFilterHistory  = document.getElementById('weightMinFilterHistory');
+            weightMaxFilterHistory  = document.getElementById('weightMaxFilterHistory');
+            heightMinFilterHistory  = document.getElementById('heightMinFilterHistory');
+            heightMaxFilterHistory  = document.getElementById('heightMaxFilterHistory');
 
+            const Http = new XMLHttpRequest();
+            Http.open("GET", "/api/history/getAll?animalId=" + _selectedRow.value.id +
+                "&dateMin=" + dateMinFilterHistory .value +
+                "&dateMax=" + dateMaxFilterHistory .value +
+                "&weightMin=" + weightMinFilterHistory .value +
+                "&weightMax=" + weightMaxFilterHistory .value +
+                "&heightMin=" + heightMinFilterHistory .value +
+                "&heightMax=" + heightMaxFilterHistory .value);
+
+            Http.send();
+
+            Http.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    animalField = document.getElementById("animalField");
+                    animalField.value = _selectedRow.value.id + "-" + _selectedRow.value.specie;
+
+                    historyData = JSON.parse(Http.responseText);
+
+                    table = document.getElementById('historyTable').getElementsByTagName('tbody')[0];
+
+                    table.children = table.getElementsByClassName( 'default' );
+
+                    for (i = 0; i < historyData.length; i++) {
+                        row = table.insertRow(i);
+
+                        row.innerHTML = "<td>" + historyData[i].id + "</td>" +
+                            "<td>" + formatTableDate(history[i].date) + "</td>" +
+                            "<td>" + historyData[i].weight + "</td>" +
+                            "<td>" + historyData[i].height + "</td>";
+
+                        row.value = historyData[i];
+
+                        row.onclick = function () {
+
+
+
+                            if (_selectedRowHistory != null) {
+                                _selectedRowHistory.setAttribute("class", null);
+                            }
+
+                            this.setAttribute("class", "selected");
+
+                            _selectedRowHistory = this;
+                        }
+                    }
+                }
+            }
         }
 
         refresh = function () {
@@ -75,8 +128,6 @@
                         row.value = animals[i];
 
                         row.onclick = function () {
-                            
-                            
                             if (_selectedRow != null) {
                                 _selectedRow.setAttribute("class", null);
                             }
@@ -84,6 +135,8 @@
                             this.setAttribute("class", "selected");
 
                             _selectedRow = this;
+
+                            refreshHistory();
                         }
                     }
                 }
@@ -178,23 +231,35 @@
             </form>
         </div>
         <div id="tableDiv">
-            <table>
-                <tr id="filter">
+            <table id="historyTable">
+                <tr id="filter" class="default">
                     <td></td>
                     <td>
-                        <input id="dateMin" oninput="refreshHistory()" placeholder="Data início" type="date" />
-                        <input id="dateMax" oninput="refreshHistory()" placeholder="Data fim" type="date" />
+                        <input id="dateMinFilterHistory" oninput="refreshHistory()" placeholder="Data início"
+                            type="date" />
+                        <input id="dateMaxFilterHistory" oninput="refreshHistory()" placeholder="Data fim"
+                            type="date" />
                     </td>
                     <td>
-                        
+                        <input id="weightMinFilterHistory" oninput="refreshHistory()" placeholder="Peso minimo"
+                            type="number" />
+                        <input id="weightMaxFilterHistory" oninput="refreshHistory()" placeholder="Peso Maximo"
+                            type="number" />
+                    </td>
+                    <td>
+                        <input id="heightMinFilterHistory" oninput="refreshHistory()" placeholder="Altura minima"
+                            type="number" />
+                        <input id="heightMaxFilterHistory" oninput="refreshHistory()" placeholder="Altura maxima"
+                            type="number" />
                     </td>
                 </tr>
-                <tr>
+                <tr class="default">
                     <th>ID</th>
                     <th>Data</th>
                     <th>Peso</th>
                     <th>Altura</th>
                 </tr>
+                
             </table>
         </div>
     </div>

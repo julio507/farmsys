@@ -2,14 +2,17 @@ package com.julio.farmsys.controllers;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 import com.julio.farmsys.model.Animal;
 import com.julio.farmsys.model.History;
 import com.julio.farmsys.service.AnimalService;
 import com.julio.farmsys.service.HistoryService;
 
+import org.springframework.boot.json.BasicJsonParser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +46,61 @@ public class HistoryController {
     }
 
     @PostMapping("update")
-    public void update() {
+    public void update(@RequestBody String data) throws Exception {
+        Map<String, Object> json = new BasicJsonParser().parseMap(data);
 
+        if (json.get("animalId") == null || json.get("animalId").toString().isEmpty()) {
+            throw new Exception("Nenhum animal selecionado");
+        }
+
+        if (json.get("date") == null || json.get("date").toString().isEmpty()) {
+            throw new Exception("Campo data vazio");
+        }
+
+        if (json.get("weight") == null || json.get("weight").toString().isEmpty()) {
+            throw new Exception("Campo peso vazio");
+        }
+
+        if (json.get("height") == null || json.get("height").toString().isEmpty()) {
+            throw new Exception("Campo altura vazio");
+        }
+
+        History h = new History();
+
+        try {
+            h.setAnimal(animalService.getById(Integer.parseInt(json.get("animalId").toString())));
+        }
+
+        catch (Exception e) {
+            throw new Exception("Animal não existe");
+        }
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+            h.setDate(sdf.parse(json.get("date").toString()));
+        }
+
+        catch (Exception e) {
+            throw new Exception("Formato de data invalido");
+        }
+
+        try {
+            h.setWeight(Double.parseDouble(json.get("weight").toString()));
+        }
+
+        catch (Exception e) {
+            throw new Exception("Valor invalido no campo peso");
+        }
+
+        try {
+            h.setHeight(Double.parseDouble(json.get("height").toString()));
+        }
+
+        catch (Exception e) {
+            throw new Exception("Valor invalido no campo altura");
+        }
+
+        historyService.save(h);
     }
 }

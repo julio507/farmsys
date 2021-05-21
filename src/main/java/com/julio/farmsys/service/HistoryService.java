@@ -25,4 +25,8 @@ public class HistoryService {
             Double heightMin, Double heightMax) {
         return historyRepository.find(animal, dateMin, dateMax, weightMin, weightMax, heightMin, heightMax);
     }
+
+    public void save( History h){
+        historyRepository.save( h );
+    }
 }
