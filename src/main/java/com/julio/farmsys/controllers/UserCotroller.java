@@ -3,7 +3,10 @@ package com.julio.farmsys.controllers;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.julio.farmsys.model.User;
+import com.julio.farmsys.reports.UserReport;
 import com.julio.farmsys.service.UserService;
 import com.julio.farmsys.util.RegistrationRequest;
 
@@ -32,8 +35,8 @@ public class UserCotroller {
     }
 
     @GetMapping(value = "getAll")
-    public List<User> getAll( @RequestParam String name, @RequestParam String email, @RequestParam boolean active ) {
-        return userService.getAll( name, email, active );
+    public List<User> getAll(@RequestParam String name, @RequestParam String email, @RequestParam boolean active) {
+        return userService.getAll(name, email, active);
     }
 
     @PostMapping(value = "update")
@@ -77,5 +80,14 @@ public class UserCotroller {
         u.setUsername(u.getEmail());
 
         userService.save(u);
+    }
+
+    @GetMapping(value = "pdf")
+    public void pdf(@RequestParam String name, @RequestParam String email, @RequestParam boolean active,
+            HttpServletResponse response) throws Exception {
+        UserReport report = new UserReport(userService.getAll(name, email, active));
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=RelatorioUsuarios.pdf");
+        report.generate(response);
     }
 }

@@ -121,6 +121,14 @@
             _selectedRow = null;
         }
 
+        print = function(){
+            nameFilter = document.getElementById('nameFilter');
+            emailFilter = document.getElementById('emailFilter');
+            activeFilter = document.getElementById( 'activeFilter' );
+
+            window.open( '/api/user/pdf?name=' + nameFilter.value + "&email=" + emailFilter.value + "&active=" + activeFilter.checked );
+        }
+
         window.onload = function () {
             refresh();
         }
@@ -146,6 +154,7 @@
         <div class="horizontal">
             <input value="Salvar" onclick="send()" type="button" />
             <input value="Limpar" onclick="clearFields()" type="button" />
+            <input value="Imprimir" onclick="print()" type="button"/>
         </div>
     </form>
     <table id='usersTable'>
