@@ -7,6 +7,7 @@
     <title>Historico</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='/css/main.css'>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script>
         _selectedRow = null;
@@ -24,20 +25,20 @@
 
         refreshHistory = function () {
             dateMinFilterHistory = document.getElementById('dateMinFilterHistory');
-            dateMaxFilterHistory  = document.getElementById('dateMaxFilterHistory');
-            weightMinFilterHistory  = document.getElementById('weightMinFilterHistory');
-            weightMaxFilterHistory  = document.getElementById('weightMaxFilterHistory');
-            heightMinFilterHistory  = document.getElementById('heightMinFilterHistory');
-            heightMaxFilterHistory  = document.getElementById('heightMaxFilterHistory');
+            dateMaxFilterHistory = document.getElementById('dateMaxFilterHistory');
+            weightMinFilterHistory = document.getElementById('weightMinFilterHistory');
+            weightMaxFilterHistory = document.getElementById('weightMaxFilterHistory');
+            heightMinFilterHistory = document.getElementById('heightMinFilterHistory');
+            heightMaxFilterHistory = document.getElementById('heightMaxFilterHistory');
 
             const Http = new XMLHttpRequest();
             Http.open("GET", "/api/history/getAll?animalId=" + _selectedRow.value.id +
-                "&dateMin=" + dateMinFilterHistory .value +
-                "&dateMax=" + dateMaxFilterHistory .value +
-                "&weightMin=" + weightMinFilterHistory .value +
-                "&weightMax=" + weightMaxFilterHistory .value +
-                "&heightMin=" + heightMinFilterHistory .value +
-                "&heightMax=" + heightMaxFilterHistory .value);
+                "&dateMin=" + dateMinFilterHistory.value +
+                "&dateMax=" + dateMaxFilterHistory.value +
+                "&weightMin=" + weightMinFilterHistory.value +
+                "&weightMax=" + weightMaxFilterHistory.value +
+                "&heightMin=" + heightMinFilterHistory.value +
+                "&heightMax=" + heightMaxFilterHistory.value);
 
             Http.send();
 
@@ -50,7 +51,7 @@
 
                     table = document.getElementById('historyTable').getElementsByTagName('tbody')[0];
 
-                    table.children = table.getElementsByClassName( 'default' );
+                    table.children = table.getElementsByClassName('default');
 
                     for (i = 0; i < historyData.length; i++) {
                         row = table.insertRow(i);
@@ -259,7 +260,7 @@
                     <th>Peso</th>
                     <th>Altura</th>
                 </tr>
-                
+
             </table>
         </div>
     </div>

@@ -5,7 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.julio.farmsys.model.Animal;
+import com.julio.farmsys.reports.AnimalReport;
 import com.julio.farmsys.service.AnimalService;
 
 import org.springframework.boot.json.BasicJsonParser;
@@ -123,4 +126,28 @@ public class AnimalController {
 
         animalService.save(a);
     }
+
+    @GetMapping(value = "pdf")
+    public void pdf(@RequestParam String species, @RequestParam String bornDateMin, @RequestParam String bornDateMax,
+            @RequestParam String aquisitionDateMin, @RequestParam String aquisitionDateMax,
+            @RequestParam String weightMin, @RequestParam String weightMax, @RequestParam String heightMin,
+            @RequestParam String heightMax, @RequestParam String active, HttpServletResponse response)
+            throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        AnimalReport report = new AnimalReport(animalService.getAll(species,
+                bornDateMin != null & !bornDateMin.isEmpty() ? sdf.parse(bornDateMin) : null,
+                bornDateMax != null && !bornDateMax.isEmpty() ? sdf.parse(bornDateMax) : null,
+                aquisitionDateMin != null && !aquisitionDateMin.isEmpty() ? sdf.parse(aquisitionDateMin) : null,
+                aquisitionDateMax != null && !aquisitionDateMax.isEmpty() ? sdf.parse(aquisitionDateMax) : null,
+                weightMin != null && !weightMin.isEmpty() ? Double.parseDouble(weightMin) : null,
+                weightMax != null && !weightMax.isEmpty() ? Double.parseDouble(weightMax) : null,
+                heightMin != null && !heightMin.isEmpty() ? Double.parseDouble(heightMin) : null,
+                heightMax != null && !heightMax.isEmpty() ? Double.parseDouble(heightMax) : null,
+                Boolean.parseBoolean(active)));
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=RelatorioAnimais.pdf");
+        report.generate(response);
+    }
+
 }

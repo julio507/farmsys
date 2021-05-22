@@ -157,6 +157,30 @@
             _selectedRow = null;
         }
 
+        print = function () {
+            speciesFilter = document.getElementById('specieFilter');
+            bornDateMinFilter = document.getElementById('bornDateMinFilter');
+            bornDateMaxFilter = document.getElementById('bornDateMaxFilter');
+            aquisitionDateMinFilter = document.getElementById('aquisitionDateMinFilter');
+            aquisitionDateMaxFilter = document.getElementById('aquisitionDateMaxFilter');
+            weightMinFilter = document.getElementById('weightMinFilter');
+            weightMaxFilter = document.getElementById('weightMaxFilter');
+            heightMinFilter = document.getElementById('heightMinFilter');
+            heightMaxFilter = document.getElementById('heightMaxFilter');
+            activeFilter = document.getElementById('activeFilter');
+
+            window.open('/api/animal/pdf?species=' + speciesFilter.value +
+                '&bornDateMin=' + bornDateMinFilter.value +
+                '&bornDateMax=' + bornDateMaxFilter.value +
+                '&aquisitionDateMin=' + aquisitionDateMinFilter.value +
+                '&aquisitionDateMax=' + aquisitionDateMaxFilter.value +
+                '&weightMin=' + weightMinFilter.value +
+                '&weightMax=' + weightMaxFilter.value +
+                '&heightMin=' + heightMinFilter.value +
+                '&heightMax=' + heightMaxFilter.value +
+                '&active=' + activeFilter.checked);
+        }
+
         window.onload = function () {
             refresh();
         }
@@ -185,6 +209,7 @@
         <div class="horizontal">
             <input value="Salvar" onclick="send()" type="button" />
             <input value="Limpar" onclick="clearFields()" type="button" />
+            <input value="Imprimir" onclick="print()" type="button"/>
         </div>
     </form>
     <table id='dataTable'>
