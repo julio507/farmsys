@@ -4,12 +4,16 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.julio.farmsys.model.Animal;
 import com.julio.farmsys.model.History;
+import com.julio.farmsys.reports.HistoryReport;
 import com.julio.farmsys.service.AnimalService;
 import com.julio.farmsys.service.HistoryService;
 
 import org.springframework.boot.json.BasicJsonParser;
+import org.springframework.util.NumberUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -67,6 +71,14 @@ public class HistoryController {
 
         History h = new History();
 
+        if (json.get("id") == null || json.get("id").toString().isEmpty()) {
+            h.setId(0l);
+        }
+
+        else {
+            h = historyService.getById(NumberUtils.parseNumber(json.get("id").toString(), Long.class));
+        }
+
         try {
             h.setAnimal(animalService.getById(Integer.parseInt(json.get("animalId").toString())));
         }
@@ -102,5 +114,25 @@ public class HistoryController {
         }
 
         historyService.save(h);
+    }
+
+    @GetMapping(value = "pdf")
+    public void pdf(@RequestParam int animalId, @RequestParam String dateMin, @RequestParam String dateMax,
+            @RequestParam String weightMin, @RequestParam String weightMax, @RequestParam String heightMin,
+            @RequestParam String heightMax, HttpServletResponse response) throws Exception {
+        Animal animal = animalService.getById(animalId);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        HistoryReport report = new HistoryReport(
+                historyService.getAll(animal, dateMin != null && !dateMin.isEmpty() ? sdf.parse(dateMin) : null,
+                        dateMax != null && !dateMax.isEmpty() ? sdf.parse(dateMax) : null,
+                        weightMin != null && !weightMin.isEmpty() ? Double.parseDouble(weightMin) : null,
+                        weightMax != null && !weightMax.isEmpty() ? Double.parseDouble(weightMax) : null,
+                        heightMin != null && !heightMin.isEmpty() ? Double.parseDouble(heightMin) : null,
+                        heightMax != null && !heightMax.isEmpty() ? Double.parseDouble(heightMax) : null));
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=RelatorioAnimais.pdf");
+        report.generate(response);
     }
 }

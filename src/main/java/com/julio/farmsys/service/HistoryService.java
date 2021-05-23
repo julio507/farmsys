@@ -17,6 +17,10 @@ public class HistoryService {
         this.historyRepository = historyRepository;
     }
 
+    public History getById( Long id ){
+        return historyRepository.getOne(id);
+    }
+
     public List<History> getAll() {
         return historyRepository.findAll();
     }

@@ -51,13 +51,13 @@
 
                     table = document.getElementById('historyTable').getElementsByTagName('tbody')[0];
 
-                    table.children = table.getElementsByClassName('default');
+                    table.innerHTML = "";
 
                     for (i = 0; i < historyData.length; i++) {
                         row = table.insertRow(i);
 
                         row.innerHTML = "<td>" + historyData[i].id + "</td>" +
-                            "<td>" + formatTableDate(history[i].date) + "</td>" +
+                            "<td>" + formatTableDate(historyData[i].date) + "</td>" +
                             "<td>" + historyData[i].weight + "</td>" +
                             "<td>" + historyData[i].height + "</td>";
 
@@ -65,7 +65,15 @@
 
                         row.onclick = function () {
 
+                            idField = document.getElementById("idField");
+                            dateField = document.getElementById("dateField");
+                            weightField = document.getElementById("weightField");
+                            heightField = document.getElementById("heightField");
 
+                            idField.value = this.value.id;
+                            dateField.value = formatFormDate(this.value.date);
+                            weightField.value = this.value.weight;
+                            heightField.value = this.value.height;
 
                             if (_selectedRowHistory != null) {
                                 _selectedRowHistory.setAttribute("class", null);
@@ -146,33 +154,28 @@
 
         send = function () {
             const Http = new XMLHttpRequest();
-            Http.open("POST", '/api/animal/update');
+            Http.open("POST", '/api/history/update');
 
             Http.setRequestHeader("Content-Type", "application/json");
 
             idField = document.getElementById("idField");
-            specieField = document.getElementById("specieField");
-            bornField = document.getElementById("bornField");
-            acquisitionField = document.getElementById("acquisitionField");
+            dateField = document.getElementById("dateField");
             weightField = document.getElementById("weightField");
             heightField = document.getElementById("heightField");
-            activeField = document.getElementById("statusField");
 
             value = {};
 
             value.id = idField.value;
-            value.specie = specieField.value;
-            value.bornDate = bornField.value;
-            value.acquisitionDate = acquisitionField.value;
+            value.animalId = _selectedRow.value.id;
+            value.date = dateField.value;
             value.weight = weightField.value;
             value.height = heightField.value;
-            value.active = activeField.checked;
 
             Http.onreadystatechange = function () {
                 if (this.readyState == 4) {
                     if (this.status == 200) {
                         clearFields();
-                        refresh();
+                        refreshHistory();
                     }
 
                     else if (this.status == 500) {
@@ -186,20 +189,33 @@
 
         clearFields = function () {
             idField = document.getElementById("idField");
-            specieField = document.getElementById("specieField");
-            bornField = document.getElementById("bornField");
-            acquisitionField = document.getElementById("acquisitionField");
+            animalField = document.getElementById("animalField");
+            dateField = document.getElementById("dateField");
             weightField = document.getElementById("weightField");
             heightField = document.getElementById("heightField");
 
             idField.value = null;
-            specieField.value = null;
-            bornField.value = null;
-            acquisitionField.value = null;
+            animalField.value = null;
+            dateField.value = null;
             weightField.value = null;
             heightField.value = null;
 
-            _selectedRow = null;
+            _selectedRowHistory = null;
+        }
+
+        print = function () {
+            idField = document.getElementById("idField");
+            dateField = document.getElementById("dateField");
+            weightField = document.getElementById("weightField");
+            heightField = document.getElementById("heightField");
+
+            window.open("/api/history/pdf?animalId=" + _selectedRow.value.id +
+                "&dateMin=" + dateMinFilterHistory.value +
+                "&dateMax=" + dateMaxFilterHistory.value +
+                "&weightMin=" + weightMinFilterHistory.value +
+                "&weightMax=" + weightMaxFilterHistory.value +
+                "&heightMin=" + heightMinFilterHistory.value +
+                "&heightMax=" + heightMaxFilterHistory.value);
         }
 
         window.onload = function () {
@@ -228,39 +244,44 @@
                 <div class="horizontal">
                     <input value="Salvar" onclick="send()" type="button" />
                     <input value="Limpar" onclick="clearFields()" type="button" />
+                    <input value="Imprimir" onclick="print()" type="button" />
                 </div>
             </form>
         </div>
         <div id="tableDiv">
             <table id="historyTable">
-                <tr id="filter" class="default">
-                    <td></td>
-                    <td>
-                        <input id="dateMinFilterHistory" oninput="refreshHistory()" placeholder="Data início"
-                            type="date" />
-                        <input id="dateMaxFilterHistory" oninput="refreshHistory()" placeholder="Data fim"
-                            type="date" />
-                    </td>
-                    <td>
-                        <input id="weightMinFilterHistory" oninput="refreshHistory()" placeholder="Peso minimo"
-                            type="number" />
-                        <input id="weightMaxFilterHistory" oninput="refreshHistory()" placeholder="Peso Maximo"
-                            type="number" />
-                    </td>
-                    <td>
-                        <input id="heightMinFilterHistory" oninput="refreshHistory()" placeholder="Altura minima"
-                            type="number" />
-                        <input id="heightMaxFilterHistory" oninput="refreshHistory()" placeholder="Altura maxima"
-                            type="number" />
-                    </td>
-                </tr>
-                <tr class="default">
-                    <th>ID</th>
-                    <th>Data</th>
-                    <th>Peso</th>
-                    <th>Altura</th>
-                </tr>
+                <thead>
+                    <tr id="filter" class="default">
+                        <td></td>
+                        <td>
+                            <input id="dateMinFilterHistory" oninput="refreshHistory()" placeholder="Data início"
+                                type="date" />
+                            <input id="dateMaxFilterHistory" oninput="refreshHistory()" placeholder="Data fim"
+                                type="date" />
+                        </td>
+                        <td>
+                            <input id="weightMinFilterHistory" oninput="refreshHistory()" placeholder="Peso minimo"
+                                type="number" />
+                            <input id="weightMaxFilterHistory" oninput="refreshHistory()" placeholder="Peso Maximo"
+                                type="number" />
+                        </td>
+                        <td>
+                            <input id="heightMinFilterHistory" oninput="refreshHistory()" placeholder="Altura minima"
+                                type="number" />
+                            <input id="heightMaxFilterHistory" oninput="refreshHistory()" placeholder="Altura maxima"
+                                type="number" />
+                        </td>
+                    </tr>
+                    <tr class="default">
+                        <th>ID</th>
+                        <th>Data</th>
+                        <th>Peso</th>
+                        <th>Altura</th>
+                    </tr>
+                </thead>
+                <tbody>
 
+                </tbody>
             </table>
         </div>
     </div>
