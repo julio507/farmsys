@@ -23,89 +23,91 @@
             return formated[2] + '-' + formated[1] + '-' + formated[0];
         }
 
-        formatGraphDate = function(date){
+        formatGraphDate = function (date) {
             formated = formatFormDate(date).split('-');
 
-            return new Date( formated[0], formated[1], formated[2] );
+            return new Date(formated[0], formated[1], formated[2]);
         }
 
         refreshHistory = function () {
-            dateMinFilterHistory = document.getElementById('dateMinFilterHistory');
-            dateMaxFilterHistory = document.getElementById('dateMaxFilterHistory');
-            weightMinFilterHistory = document.getElementById('weightMinFilterHistory');
-            weightMaxFilterHistory = document.getElementById('weightMaxFilterHistory');
-            heightMinFilterHistory = document.getElementById('heightMinFilterHistory');
-            heightMaxFilterHistory = document.getElementById('heightMaxFilterHistory');
+            if (_selectedRow) {
+                dateMinFilterHistory = document.getElementById('dateMinFilterHistory');
+                dateMaxFilterHistory = document.getElementById('dateMaxFilterHistory');
+                weightMinFilterHistory = document.getElementById('weightMinFilterHistory');
+                weightMaxFilterHistory = document.getElementById('weightMaxFilterHistory');
+                heightMinFilterHistory = document.getElementById('heightMinFilterHistory');
+                heightMaxFilterHistory = document.getElementById('heightMaxFilterHistory');
 
-            const Http = new XMLHttpRequest();
-            Http.open("GET", "/api/history/getAll?animalId=" + _selectedRow.value.id +
-                "&dateMin=" + dateMinFilterHistory.value +
-                "&dateMax=" + dateMaxFilterHistory.value +
-                "&weightMin=" + weightMinFilterHistory.value +
-                "&weightMax=" + weightMaxFilterHistory.value +
-                "&heightMin=" + heightMinFilterHistory.value +
-                "&heightMax=" + heightMaxFilterHistory.value);
+                const Http = new XMLHttpRequest();
+                Http.open("GET", "/api/history/getAll?animalId=" + _selectedRow.value.id +
+                    "&dateMin=" + dateMinFilterHistory.value +
+                    "&dateMax=" + dateMaxFilterHistory.value +
+                    "&weightMin=" + weightMinFilterHistory.value +
+                    "&weightMax=" + weightMaxFilterHistory.value +
+                    "&heightMin=" + heightMinFilterHistory.value +
+                    "&heightMax=" + heightMaxFilterHistory.value);
 
-            Http.send();
+                Http.send();
 
-            Http.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    animalField = document.getElementById("animalField");
-                    animalField.value = _selectedRow.value.id + "-" + _selectedRow.value.specie;
+                Http.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        animalField = document.getElementById("animalField");
+                        animalField.value = _selectedRow.value.id + "-" + _selectedRow.value.specie;
 
-                    historyData = JSON.parse(Http.responseText);
+                        historyData = JSON.parse(Http.responseText);
 
-                    table = document.getElementById('historyTable').getElementsByTagName('tbody')[0];
+                        table = document.getElementById('historyTable').getElementsByTagName('tbody')[0];
 
-                    table.innerHTML = "";
+                        table.innerHTML = "";
 
-                    var data = new google.visualization.DataTable();
-                    data.addColumn('date', 'Data');
-                    data.addColumn('number', 'Peso');
-                    data.addColumn('number', 'Altura');
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('date', 'Data');
+                        data.addColumn('number', 'Peso');
+                        data.addColumn('number', 'Altura');
 
-                    var options = {
-                        'title': 'Historico',
-                        'height' : '100%',
-                        'width': '100%'
-                    };
+                        var options = {
+                            'title': 'Historico',
+                            'height': '100%',
+                            'width': '100%'
+                        };
 
-                    for (i = 0; i < historyData.length; i++) {
-                        row = table.insertRow(i);
+                        for (i = 0; i < historyData.length; i++) {
+                            row = table.insertRow(i);
 
-                        row.innerHTML = "<td>" + historyData[i].id + "</td>" +
-                            "<td>" + formatTableDate(historyData[i].date) + "</td>" +
-                            "<td>" + historyData[i].weight + "</td>" +
-                            "<td>" + historyData[i].height + "</td>";
+                            row.innerHTML = "<td>" + historyData[i].id + "</td>" +
+                                "<td>" + formatTableDate(historyData[i].date) + "</td>" +
+                                "<td>" + historyData[i].weight + "</td>" +
+                                "<td>" + historyData[i].height + "</td>";
 
-                        row.value = historyData[i];
+                            row.value = historyData[i];
 
-                        data.addRow([formatGraphDate(historyData[i].date), historyData[i].weight, historyData[i].height]);
+                            data.addRow([formatGraphDate(historyData[i].date), historyData[i].weight, historyData[i].height]);
 
-                        row.onclick = function () {
+                            row.onclick = function () {
 
-                            idField = document.getElementById("idField");
-                            dateField = document.getElementById("dateField");
-                            weightField = document.getElementById("weightField");
-                            heightField = document.getElementById("heightField");
+                                idField = document.getElementById("idField");
+                                dateField = document.getElementById("dateField");
+                                weightField = document.getElementById("weightField");
+                                heightField = document.getElementById("heightField");
 
-                            idField.value = this.value.id;
-                            dateField.value = formatFormDate(this.value.date);
-                            weightField.value = this.value.weight;
-                            heightField.value = this.value.height;
+                                idField.value = this.value.id;
+                                dateField.value = formatFormDate(this.value.date);
+                                weightField.value = this.value.weight;
+                                heightField.value = this.value.height;
 
-                            if (_selectedRowHistory != null) {
-                                _selectedRowHistory.setAttribute("class", null);
+                                if (_selectedRowHistory != null) {
+                                    _selectedRowHistory.setAttribute("class", null);
+                                }
+
+                                this.setAttribute("class", "selected");
+
+                                _selectedRowHistory = this;
                             }
-
-                            this.setAttribute("class", "selected");
-
-                            _selectedRowHistory = this;
                         }
-                    }
 
-                    var chart = new google.visualization.AreaChart(document.getElementById('graph'));
-                    chart.draw(data, options);
+                        var chart = new google.visualization.AreaChart(document.getElementById('graph'));
+                        chart.draw(data, options);
+                    }
                 }
             }
         }
@@ -249,12 +251,16 @@
                 document.getElementById("historyTable").style.display = "block";
 
                 document.getElementById("graph").style.display = "none";
+
+                refreshHistory();
             };
 
             document.getElementById("tab2").onclick = function () {
                 document.getElementById("historyTable").style.display = "none";
 
                 document.getElementById("graph").style.display = "block";
+
+                refreshHistory();
             };
         }
     </script>
@@ -270,7 +276,7 @@
     </div>
     <div id="gridHistory">
         <div id="formDiv">
-            <h1>Animais:</h1>
+            <h1>Historico:</h1>
             <form>
                 <p>ID:</p><input id="idField" type="text" disabled="true" />
                 <p>Animal:</p><input id="animalField" type="text" disabled="true" />
