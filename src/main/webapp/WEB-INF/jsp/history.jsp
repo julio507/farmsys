@@ -23,6 +23,12 @@
             return formated[2] + '-' + formated[1] + '-' + formated[0];
         }
 
+        formatGraphDate = function(date){
+            formated = formatFormDate(date).split('-');
+
+            return new Date( formated[0], formated[1], formated[2] );
+        }
+
         refreshHistory = function () {
             dateMinFilterHistory = document.getElementById('dateMinFilterHistory');
             dateMaxFilterHistory = document.getElementById('dateMaxFilterHistory');
@@ -53,6 +59,17 @@
 
                     table.innerHTML = "";
 
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('date', 'Data');
+                    data.addColumn('number', 'Peso');
+                    data.addColumn('number', 'Altura');
+
+                    var options = {
+                        'title': 'Historico',
+                        'height' : '100%',
+                        'width': '100%'
+                    };
+
                     for (i = 0; i < historyData.length; i++) {
                         row = table.insertRow(i);
 
@@ -62,6 +79,8 @@
                             "<td>" + historyData[i].height + "</td>";
 
                         row.value = historyData[i];
+
+                        data.addRow([formatGraphDate(historyData[i].date), historyData[i].weight, historyData[i].height]);
 
                         row.onclick = function () {
 
@@ -84,6 +103,9 @@
                             _selectedRowHistory = this;
                         }
                     }
+
+                    var chart = new google.visualization.AreaChart(document.getElementById('graph'));
+                    chart.draw(data, options);
                 }
             }
         }
@@ -219,7 +241,21 @@
         }
 
         window.onload = function () {
+            google.charts.load('current', { 'packages': ['corechart'] });
+
             refresh();
+
+            document.getElementById("tab1").onclick = function () {
+                document.getElementById("historyTable").style.display = "block";
+
+                document.getElementById("graph").style.display = "none";
+            };
+
+            document.getElementById("tab2").onclick = function () {
+                document.getElementById("historyTable").style.display = "none";
+
+                document.getElementById("graph").style.display = "block";
+            };
         }
     </script>
 
@@ -249,6 +285,10 @@
             </form>
         </div>
         <div id="tableDiv">
+            <div id="tabs">
+                <div id="tab1" class="tab">Tabela</div>
+                <div id="tab2" class="tab">Grafico</div>
+            </div>
             <table id="historyTable">
                 <thead>
                     <tr id="filter" class="default">
@@ -283,6 +323,7 @@
 
                 </tbody>
             </table>
+            <div id="graph"></div>
         </div>
     </div>
     <table id='dataTable'>
