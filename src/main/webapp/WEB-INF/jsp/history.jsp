@@ -12,6 +12,7 @@
     <script>
         _selectedRow = null;
         _selectedRowHistory = null;
+        chart = null;
 
         formatFormDate = function (date) {
             return date.split('T')[0];
@@ -68,7 +69,10 @@
                         var options = {
                             'title': 'Historico',
                             'height': '100%',
-                            'width': '100%'
+                            'width': '100%',
+                            'hAxis':{
+                                'format' : 'dd/MM/yyyy'
+                            }
                         };
 
                         for (i = 0; i < historyData.length; i++) {
@@ -105,7 +109,7 @@
                             }
                         }
 
-                        var chart = new google.visualization.AreaChart(document.getElementById('graph'));
+                        chart = new google.visualization.AreaChart(document.getElementById('graph'));
                         chart.draw(data, options);
                     }
                 }
@@ -213,13 +217,11 @@
 
         clearFields = function () {
             idField = document.getElementById("idField");
-            animalField = document.getElementById("animalField");
             dateField = document.getElementById("dateField");
             weightField = document.getElementById("weightField");
             heightField = document.getElementById("heightField");
 
             idField.value = null;
-            animalField.value = null;
             dateField.value = null;
             weightField.value = null;
             heightField.value = null;
@@ -240,6 +242,13 @@
                 "&weightMax=" + weightMaxFilterHistory.value +
                 "&heightMin=" + heightMinFilterHistory.value +
                 "&heightMax=" + heightMaxFilterHistory.value);
+        }
+
+        printGraph = function(){
+            var newWindow = window.open("", "_blank");
+            newWindow.document.write("<img src='"+chart.getImageURI()+"'>");
+            newWindow.print();
+            newWindow.close();
         }
 
         window.onload = function () {
@@ -287,6 +296,7 @@
                     <input value="Salvar" onclick="send()" type="button" />
                     <input value="Limpar" onclick="clearFields()" type="button" />
                     <input value="Imprimir" onclick="print()" type="button" />
+                    <input value="Grafico" onclick="printGraph()" type="button" />
                 </div>
             </form>
         </div>

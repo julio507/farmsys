@@ -29,4 +29,8 @@ public class PagesController {
         return "history";
     }
     
+    @GetMapping( "sell" )
+    public String sell(Model model){
+        return "sell";
+    }
 }

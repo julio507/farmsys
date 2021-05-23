@@ -19,6 +19,9 @@
         <div>
             <a href="/history">Historico</a>
         </div>
+        <!-- <div>
+            <a href="/sell">Venda</a>
+        </div> -->
     </div>
 </body>
 </html>

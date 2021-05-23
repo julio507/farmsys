@@ -8,11 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Animal {
-    
-    @Id    
+
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String specie;
@@ -24,6 +25,9 @@ public class Animal {
 
     @OneToMany
     private List<History> history;
+
+    @OneToOne
+    private Sell sell;
 
     public Animal(Long id, String specie, Date bornDate, Date acquisitionDate, Double weight, Double height) {
         this.id = id;
@@ -43,8 +47,7 @@ public class Animal {
         this.active = active;
     }
 
-    public Animal()
-    {
+    public Animal() {
 
     }
 
