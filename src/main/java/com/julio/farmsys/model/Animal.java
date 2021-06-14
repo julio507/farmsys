@@ -16,6 +16,7 @@ public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String identification;
     private String specie;
     private Date bornDate;
     private Date acquisitionDate;
@@ -29,8 +30,9 @@ public class Animal {
     @OneToOne
     private Sell sell;
 
-    public Animal(Long id, String specie, Date bornDate, Date acquisitionDate, Double weight, Double height) {
+    public Animal(Long id, String identification, String specie, Date bornDate, Date acquisitionDate, Double weight, Double height) {
         this.id = id;
+        this.identification = identification;
         this.specie = specie;
         this.bornDate = bornDate;
         this.acquisitionDate = acquisitionDate;
@@ -38,7 +40,8 @@ public class Animal {
         this.height = height;
     }
 
-    public Animal(String specie, Date bornDate, Date acquisitionDate, Double weight, Double height, boolean active) {
+    public Animal(String identification, String specie, Date bornDate, Date acquisitionDate, Double weight, Double height, boolean active) {
+        this.identification = identification;
         this.specie = specie;
         this.bornDate = bornDate;
         this.acquisitionDate = acquisitionDate;
@@ -57,6 +60,14 @@ public class Animal {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getIdentification() {
+        return identification;
+    }
+
+    public void setIdentification(String identification) {
+        this.identification = identification;
     }
 
     public String getSpecie() {

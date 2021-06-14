@@ -11,8 +11,8 @@ public class AnimalReport extends Report {
 
     public AnimalReport(List<Animal> animals) {
         super("Relatorio de Animais");
-        this.tableHeaders = new String[]{ "ID", "Especie", "Data de Nacimento", "Data de Aquisição", "Peso", "Altura", "Ativo" };
-        this.tableWidths = new float[]{ 0.1f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.1f };
+        this.tableHeaders = new String[]{ "ID", "Identificação", "Especie", "Data de Nacimento", "Data de Aquisição", "Peso", "Altura", "Ativo" };
+        this.tableWidths = new float[]{ 0.1f, 0.2f, 0.2f, 0.2f, 0.2f, 0.1f, 0.1f, 0.1f };
         this.animals = animals;
     }
 
@@ -22,6 +22,7 @@ public class AnimalReport extends Report {
         
         for (Animal animal : animals) {
             table.addCell( String.valueOf( animal.getId() ) );
+            table.addCell( animal.getIdentification() );
             table.addCell( animal.getSpecie() );
             table.addCell( sdf.format( animal.getBornDate() ) );
             table.addCell( sdf.format( animal.getAcquisitionDate() ) );

@@ -33,4 +33,8 @@ public class HistoryService {
     public void save( History h){
         historyRepository.save( h );
     }
+
+    public void delete(  History h){
+        historyRepository.delete( h );
+    }
 }

@@ -31,7 +31,7 @@ public class AnimalController {
     }
 
     @GetMapping("getAll")
-    public List<Animal> getAll(@RequestParam String species, @RequestParam String bornDateMin,
+    public List<Animal> getAll(@RequestParam String identification, @RequestParam String species, @RequestParam String bornDateMin,
             @RequestParam String bornDateMax, @RequestParam String aquisitionDateMin,
             @RequestParam String aquisitionDateMax, @RequestParam String weightMin, @RequestParam String weightMax,
             @RequestParam String heightMin, @RequestParam String heightMax, @RequestParam String active)
@@ -39,7 +39,7 @@ public class AnimalController {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        return animalService.getAll(species,
+        return animalService.getAll(species, identification,
                 bornDateMin != null & !bornDateMin.isEmpty() ? sdf.parse(bornDateMin) : null,
                 bornDateMax != null && !bornDateMax.isEmpty() ? sdf.parse(bornDateMax) : null,
                 aquisitionDateMin != null && !aquisitionDateMin.isEmpty() ? sdf.parse(aquisitionDateMin) : null,
@@ -56,6 +56,10 @@ public class AnimalController {
 
         Map<String, Object> json = new BasicJsonParser().parseMap(data);
 
+        if (json.get("identification") == null || json.get("identification").toString().isEmpty()) {
+            throw new Exception("Campo Identificação vazio");
+        }
+
         if (json.get("specie") == null || json.get("specie").toString().isEmpty()) {
             throw new Exception("Campo Espécie vazio");
         }
@@ -66,14 +70,6 @@ public class AnimalController {
 
         if (json.get("acquisitionDate") == null || json.get("acquisitionDate").toString().isEmpty()) {
             throw new Exception("Campo Data de Aquisição vazio");
-        }
-
-        if (json.get("weight") == null || json.get("weight").toString().isEmpty()) {
-            throw new Exception("Campo Peso vazio");
-        }
-
-        if (json.get("height") == null || json.get("height").toString().isEmpty()) {
-            throw new Exception("Campo Altura vazio");
         }
 
         Animal a = new Animal();
@@ -87,6 +83,8 @@ public class AnimalController {
         }
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        a.setIdentification(json.get("identification").toString());
 
         a.setSpecie(json.get("specie").toString());
 
@@ -106,36 +104,20 @@ public class AnimalController {
             throw new Exception("Formato de data invalido no campo Data de Aquisição");
         }
 
-        try {
-            a.setWeight(NumberUtils.parseNumber(json.get("weight").toString(), Double.class));
-        }
-
-        catch (Exception e) {
-            throw new Exception("Valor invalido no campo Peso");
-        }
-
-        try {
-            a.setHeight(NumberUtils.parseNumber(json.get("height").toString(), Double.class));
-        }
-
-        catch (Exception e) {
-            throw new Exception("Valor invalido no campo Altura");
-        }
-
         a.setActive(Boolean.valueOf(json.get("active").toString()));
 
         animalService.save(a);
     }
 
     @GetMapping(value = "pdf")
-    public void pdf(@RequestParam String species, @RequestParam String bornDateMin, @RequestParam String bornDateMax,
+    public void pdf( @RequestParam String identification, @RequestParam String species, @RequestParam String bornDateMin, @RequestParam String bornDateMax,
             @RequestParam String aquisitionDateMin, @RequestParam String aquisitionDateMax,
             @RequestParam String weightMin, @RequestParam String weightMax, @RequestParam String heightMin,
             @RequestParam String heightMax, @RequestParam String active, HttpServletResponse response)
             throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        AnimalReport report = new AnimalReport(animalService.getAll(species,
+        AnimalReport report = new AnimalReport(animalService.getAll( identification, species,
                 bornDateMin != null & !bornDateMin.isEmpty() ? sdf.parse(bornDateMin) : null,
                 bornDateMax != null && !bornDateMax.isEmpty() ? sdf.parse(bornDateMax) : null,
                 aquisitionDateMin != null && !aquisitionDateMin.isEmpty() ? sdf.parse(aquisitionDateMin) : null,

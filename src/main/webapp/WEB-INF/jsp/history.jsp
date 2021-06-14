@@ -70,8 +70,8 @@
                             'title': 'Historico',
                             'height': '100%',
                             'width': '100%',
-                            'hAxis':{
-                                'format' : 'dd/MM/yyyy'
+                            'hAxis': {
+                                'format': 'dd/MM/yyyy'
                             }
                         };
 
@@ -119,6 +119,7 @@
         refresh = function () {
 
             speciesFilter = document.getElementById('specieFilter');
+            identificationFilter = document.getElementById('identificationFilter');
             bornDateMinFilter = document.getElementById('bornDateMinFilter');
             bornDateMaxFilter = document.getElementById('bornDateMaxFilter');
             aquisitionDateMinFilter = document.getElementById('aquisitionDateMinFilter');
@@ -130,7 +131,8 @@
             activeFilter = document.getElementById('activeFilter');
 
             const Http = new XMLHttpRequest();
-            Http.open("GET", '/api/animal/getAll?species=' + speciesFilter.value +
+            Http.open("GET", '/api/animal/getAll?identification=' + identificationFilter.value +
+                '&species=' + speciesFilter.value +
                 '&bornDateMin=' + bornDateMinFilter.value +
                 '&bornDateMax=' + bornDateMaxFilter.value +
                 '&aquisitionDateMin=' + aquisitionDateMinFilter.value +
@@ -155,6 +157,7 @@
                         row = table.insertRow(i);
 
                         row.innerHTML = "<td>" + animals[i].id + "</td>" +
+                            "<td>" + animals[i].identification + "</td>" +
                             "<td>" + animals[i].specie + "</td>" +
                             "<td>" + formatTableDate(animals[i].bornDate) + "</td>" +
                             "<td>" + formatTableDate(animals[i].acquisitionDate) + "</td>" +
@@ -244,9 +247,9 @@
                 "&heightMax=" + heightMaxFilterHistory.value);
         }
 
-        printGraph = function(){
+        printGraph = function () {
             var newWindow = window.open("", "_blank");
-            newWindow.document.write("<img src='"+chart.getImageURI()+"'>");
+            newWindow.document.write("<img src='" + chart.getImageURI() + "'>");
             newWindow.print();
             newWindow.close();
         }
@@ -346,7 +349,10 @@
         <thead>
             <tr id="filter">
                 <td></td>
-                <td><input id="specieFilter" oninput="refresh()" placeholder="Nome" type="text" /></td>
+                <td><input id="identificationFilter" oninput="refresh()" placeholder="Identifica&ccedil;&atilde;o"
+                        type="text" />
+                </td>
+                <td><input id="specieFilter" oninput="refresh()" placeholder="Esp&eacute;cie" type="text" /></td>
                 <td>
                     <input id="bornDateMinFilter" oninput="refresh()" placeholder="Nascimento início" type="date" />
                     <input id="bornDateMaxFilter" oninput="refresh()" placeholder="Nascimento fim" type="date" />
@@ -370,6 +376,7 @@
             </tr>
             <tr>
                 <th>ID</th>
+                <th>Identfica&ccedil;&atilde;o</th>
                 <th>Esp&eacute;cie</th>
                 <th>Data de nascimento</th>
                 <th>Data de aquisi&ccedil;&atilde;o</th>

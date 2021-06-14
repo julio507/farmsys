@@ -24,6 +24,7 @@
         refresh = function () {
 
             speciesFilter = document.getElementById('specieFilter');
+            identificationFilter = document.getElementById('identificationFilter');
             bornDateMinFilter = document.getElementById('bornDateMinFilter');
             bornDateMaxFilter = document.getElementById('bornDateMaxFilter');
             aquisitionDateMinFilter = document.getElementById('aquisitionDateMinFilter');
@@ -35,7 +36,8 @@
             activeFilter = document.getElementById('activeFilter');
 
             const Http = new XMLHttpRequest();
-            Http.open("GET", '/api/animal/getAll?species=' + speciesFilter.value +
+            Http.open("GET", '/api/animal/getAll?identification=' + identificationFilter.value +
+                '&species=' + speciesFilter.value +
                 '&bornDateMin=' + bornDateMinFilter.value +
                 '&bornDateMax=' + bornDateMaxFilter.value +
                 '&aquisitionDateMin=' + aquisitionDateMinFilter.value +
@@ -60,6 +62,7 @@
                         row = table.insertRow(i);
 
                         row.innerHTML = "<td>" + animals[i].id + "</td>" +
+                            "<td>" + animals[i].identification + "</td>" +
                             "<td>" + animals[i].specie + "</td>" +
                             "<td>" + formatTableDate(animals[i].bornDate) + "</td>" +
                             "<td>" + formatTableDate(animals[i].acquisitionDate) + "</td>" +
@@ -71,6 +74,7 @@
 
                         row.onclick = function () {
                             idField = document.getElementById("idField");
+                            identificationField = document.getElementById("identificationField");
                             specieField = document.getElementById("specieField");
                             bornField = document.getElementById("bornField");
                             acquisitionField = document.getElementById("acquisitionField");
@@ -79,6 +83,7 @@
                             activeField = document.getElementById("statusField");
 
                             idField.value = this.value.id;
+                            identificationField.value = this.value.identification;
                             specieField.value = this.value.specie;
                             bornField.value = formatFormDate(this.value.bornDate);
                             acquisitionField.value = formatFormDate(this.value.acquisitionDate);
@@ -106,6 +111,7 @@
             Http.setRequestHeader("Content-Type", "application/json");
 
             idField = document.getElementById("idField");
+            identificationField = document.getElementById("identificationField");
             specieField = document.getElementById("specieField");
             bornField = document.getElementById("bornField");
             acquisitionField = document.getElementById("acquisitionField");
@@ -116,6 +122,7 @@
             value = {};
 
             value.id = idField.value;
+            value.identification = identificationField.value;
             value.specie = specieField.value;
             value.bornDate = bornField.value;
             value.acquisitionDate = acquisitionField.value;
@@ -141,6 +148,7 @@
 
         clearFields = function () {
             idField = document.getElementById("idField");
+            identificationField = document.getElementById("identificationField");
             specieField = document.getElementById("specieField");
             bornField = document.getElementById("bornField");
             acquisitionField = document.getElementById("acquisitionField");
@@ -148,6 +156,7 @@
             heightField = document.getElementById("heightField");
 
             idField.value = null;
+            identificationField.value = null;
             specieField.value = null;
             bornField.value = null;
             acquisitionField.value = null;
@@ -159,6 +168,7 @@
 
         print = function () {
             speciesFilter = document.getElementById('specieFilter');
+            identificationField = document.getElementById("identificationFilter");
             bornDateMinFilter = document.getElementById('bornDateMinFilter');
             bornDateMaxFilter = document.getElementById('bornDateMaxFilter');
             aquisitionDateMinFilter = document.getElementById('aquisitionDateMinFilter');
@@ -169,7 +179,8 @@
             heightMaxFilter = document.getElementById('heightMaxFilter');
             activeFilter = document.getElementById('activeFilter');
 
-            window.open('/api/animal/pdf?species=' + speciesFilter.value +
+            window.open('/api/animal/pdf?identification=' + identificationField.value +
+                '&species=' + speciesFilter.value +
                 '&bornDateMin=' + bornDateMinFilter.value +
                 '&bornDateMax=' + bornDateMaxFilter.value +
                 '&aquisitionDateMin=' + aquisitionDateMinFilter.value +
@@ -198,25 +209,31 @@
     <h1>Animais:</h1>
     <form>
         <p>ID:</p><input id="idField" type="text" disabled="true" />
+        <p>Identifica&ccedil;&atilde;o<span id="red">*</span></p><input id="identificationField" type="text" />
         <p>Esp&eacute;cie:<span id="red">*</span></p><input id="specieField" type="text" />
         <p>Data de nascimento:<span id="red">*</span></p><input id="bornField" type="date" />
         <p>Data de aquisi&ccedil;&atilde;o:<span id="red">*</span></p><input id="acquisitionField" type="date" />
-        <p>Peso:<span id="red">*</span></p><input id="weightField" type="number" min="0" />
-        <p>Altura:<span id="red">*</span></p><input id="heightField" type="number" min="0" />
+        <p style="display: none;">Peso:<span id="red">*</span></p><input id="weightField" style="display: none;"
+            type="number" min="0" />
+        <p style="display: none;">Altura:<span id="red">*</span></p><input id="heightField" style="display: none;"
+            type="number" min="0" />
         <div class="horizontal">
             <p>Ativo:</p><input id="statusField" type="checkbox" />
         </div>
         <div class="horizontal">
             <input value="Salvar" onclick="send()" type="button" />
             <input value="Limpar" onclick="clearFields()" type="button" />
-            <input value="Imprimir" onclick="print()" type="button"/>
+            <input value="Imprimir" onclick="print()" type="button" />
         </div>
     </form>
     <table id='dataTable'>
         <thead>
             <tr id="filter">
                 <td></td>
-                <td><input id="specieFilter" oninput="refresh()" placeholder="Nome" type="text" /></td>
+                <td><input id="identificationFilter" oninput="refresh()" placeholder="Identifica&ccedil;&atilde;o"
+                        type="text" />
+                </td>
+                <td><input id="specieFilter" oninput="refresh()" placeholder="Esp&eacute;cie" type="text" /></td>
                 <td>
                     <input id="bornDateMinFilter" oninput="refresh()" placeholder="Nascimento início" type="date" />
                     <input id="bornDateMaxFilter" oninput="refresh()" placeholder="Nascimento fim" type="date" />
@@ -240,6 +257,7 @@
             </tr>
             <tr>
                 <th>ID</th>
+                <th>Identifica&ccedil;&atilde;o</th>
                 <th>Esp&eacute;cie</th>
                 <th>Data de nascimento</th>
                 <th>Data de aquisi&ccedil;&atilde;o</th>

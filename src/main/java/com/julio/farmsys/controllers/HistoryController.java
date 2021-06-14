@@ -135,4 +135,9 @@ public class HistoryController {
         response.setHeader("Content-Disposition", "attachment; filename=RelatorioAnimais.pdf");
         report.generate(response);
     }
+
+    @PostMapping( value = "delete" )
+    public void delete(@RequestParam long id) {
+        historyService.delete(historyService.getById(id));
+    }
 }
